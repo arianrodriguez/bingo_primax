@@ -1,5 +1,6 @@
 <script setup>
     import Button from './Button.vue'
+    import { range_letters } from '../services/animation-balls.js'
 </script>
 
 <template>
@@ -9,16 +10,18 @@
             
             <div class="wrapper flex">
                 <div class="card flex">
-                    <h2 class="letter">N</h2>
+                    <h2 class="letter">{{ letter }}</h2>
                     <div class="circle">
                         <div class="outer-circle flex"></div>
                         <div class="inner-circle">
-                            <span>43</span>
+                            <span>{{number}}</span>
                         </div>
                     </div>
                 </div>
 
-                <Button title="girar"/>
+                <Button title="girar" 
+                @emitNumber="changeNumber"
+                @noNumbers="showPopUp"/>
             </div>
 
             <div class="wrapper flex">
@@ -45,7 +48,53 @@
 
 <script>
     export default {
-        name: 'Main'
+        name: 'Main',
+        components: {
+            Button
+        },
+
+        data() {
+            return {
+                number: "?",
+                letter: "B",
+                popup: false
+            }
+        },
+        methods: {
+            changeNumber(data) {
+                let letters = ['B', 'I', 'N', 'G', 'O'];
+                let index = 0;
+                let indexLetter = 0;
+                if (this.popup) return;
+
+                const interval = setInterval(() => {
+                    this.number = data[index];
+                    this.letter = letters[indexLetter];
+                    index++;
+                    indexLetter++;
+                    if(indexLetter > 4) indexLetter = 0;
+
+                    if (index >= data.length) {
+                        console.log('ojo')
+                        this.number = data[0];
+                        for(let i=0; i<letters.length; ++i) {
+                            if(this.number >= range_letters[letters[i]][0] && this.number <= range_letters[letters[i]][1]) {
+                                this.letter = letters[i];
+                                break;
+                            }
+                            
+                        }
+                        clearInterval(interval);
+                    }
+                }, 10);
+            },
+
+            showPopUp() {
+                alert('No hay más números disponibles');
+                this.popup = true;
+                this.number = "-"
+            }
+        }
     }
 </script>
 

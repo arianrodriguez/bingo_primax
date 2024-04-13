@@ -1,4 +1,5 @@
 <script setup>
+    import { generate_ball, animation_numbers_random } from '../services/animation-balls.js'
     defineProps({
         title: {
             type: String,
@@ -9,13 +10,28 @@
 
 <script>
     export default {
-        name: 'Button'
+        name: 'Button',
+        methods: {
+            emitNumber() {
+                let number = generate_ball()
+                if(!number) this.$emit('noNumbers')
+            
+                let data = [number];
+                console.log('number: ', number)
+
+                for(let i=0; i<100; i++) {
+                    let number = animation_numbers_random();
+                    data.push(number);
+                }
+                this.$emit('emitNumber', data);   
+            }
+        }
     }
 </script>
 
 <template>
     <div class="button">
-        <div class="button__content">{{ title }}</div>
+        <div class="button__content" @click="emitNumber">{{ title }}</div>
     </div>
 </template>
 

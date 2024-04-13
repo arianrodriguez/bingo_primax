@@ -12,8 +12,21 @@ body {
   background: radial-gradient(circle, rgba(255,175,69,1) 40%, rgba(255,147,48,1) 100%);
 }
 
+#app {
+  height: 100vh;
+}
+
 .flex {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 5px; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; 
+  border-radius: 5px;
 }

@@ -17,7 +17,7 @@ const generate_ball = () => {
     while(1) {
         let number = Math.floor(Math.random() * 75) + 1;
 
-        if(Object.keys(numbers_registered).length === 5) return
+        if(Object.keys(numbers_registered).length === 75) return
 
         if(!numbers_registered[number]) {
             numbers_registered[number] = 1;

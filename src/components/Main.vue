@@ -29,15 +29,7 @@
                 <div class="card flex">
                     <h2 class="numbers-title">Números cantados</h2>
                     <div class="list-balls">
-                        <p>B - 15</p>
-                        <p>I - 45</p>
-                        <p>N - 25</p>
-                        <p>G - 65</p>
-                        <p>O - 85</p>
-                        <p>O - 85</p>
-                        <p>O - 85</p>
-                        <p>O - 85</p>
-                        <p>O - 85</p>
+                        <p v-html="html_numbers"></p>
                     </div>
                 </div>
                 <Button title="restablecer"/>
@@ -57,7 +49,8 @@
             return {
                 number: "?",
                 letter: "B",
-                popup: false
+                popup: false,
+                html_numbers: ""
             }
         },
         methods: {
@@ -85,14 +78,21 @@
                             
                         }
                         clearInterval(interval);
+                        this.insertNumber();
                     }
                 }, 10);
+
+                
             },
 
             showPopUp() {
                 alert('No hay más números disponibles');
                 this.popup = true;
                 this.number = "-"
+            },
+
+            insertNumber() {
+                this.html_numbers += `<p>${this.letter} - ${this.number}</p>`;
             }
         }
     }
@@ -186,6 +186,7 @@
         font-size: 2rem;
         text-align: center;
         overflow-y: scroll;
+        width: 100%;
 
     }
 

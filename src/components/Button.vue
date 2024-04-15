@@ -4,6 +4,9 @@
         title: {
             type: String,
             required: true
+        },
+        noNumbers: {
+            type: Boolean
         }
     });
 </script>
@@ -12,18 +15,22 @@
     export default {
         name: 'Button',
         methods: {
-            emitNumber() {
-                let number = generate_ball()
-                if(!number) this.$emit('noNumbers')
-            
-                let data = [number];
-                console.log('number: ', number)
-
-                for(let i=0; i<100; i++) {
-                    let number = animation_numbers_random();
-                    data.push(number);
+            onClick() {
+                if(this.title === "girar" && !this.noNumbers) {
+                    let number = generate_ball()
+                    if(!number) this.$emit('noNumbers')
+                
+                    let data = [number];
+                    console.log('number: ', number)
+    
+                    for(let i=0; i<100; i++) {
+                        let number = animation_numbers_random();
+                        data.push(number);
+                    }
+                    this.$emit('emitNumber', data);   
+                }else {
+                    this.$emit('resetNumbers')
                 }
-                this.$emit('emitNumber', data);   
             }
         }
     }
@@ -31,7 +38,7 @@
 
 <template>
     <div class="button">
-        <div class="button__content" @click="emitNumber">{{ title }}</div>
+        <div class="button__content" @click="onClick">{{ title }}</div>
     </div>
 </template>
 
@@ -48,6 +55,7 @@
         font-size: 1.3rem;
         text-align: center;
         width: 100%;
+        user-select: none;
     }
 
     .button__content {        

@@ -28,8 +28,11 @@
                         data.push(number);
                     }
                     this.$emit('emitNumber', data);   
-                }else {
+                }else if(this.title === "restablecer") {
                     this.$emit('resetNumbers')
+                }else if(this.title === "confirmar") {
+                    // backend
+                    console.log('nuevo ganador');
                 }
             }
         }

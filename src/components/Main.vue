@@ -1,10 +1,16 @@
 <script setup>
     import Button from './Button.vue'
-    import { range_letters } from '../services/animation-balls.js'
+    import Popup from './Popup.vue';
+    import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
 </script>
 
 <template>
     <div class="main">
+        <Popup 
+        v-if="popup"
+        title="No hay más números" 
+        detail="No hay más números disponibles para girar, por favor restablezca los números para continuar."
+        @closePopup="closePopup" />
         <div class="main__content flex">
             <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
             
@@ -20,6 +26,7 @@
                 </div>
 
                 <Button title="girar" 
+                :noNumbers="popup"
                 @emitNumber="changeNumber"
                 @noNumbers="showPopUp"/>
             </div>
@@ -32,7 +39,8 @@
                         <p v-html="html_numbers"></p>
                     </div>
                 </div>
-                <Button title="restablecer"/>
+                <Button title="restablecer"
+                @resetNumbers="clearNumbers"/>
             </div>
         </div>
     </div>
@@ -42,7 +50,8 @@
     export default {
         name: 'Main',
         components: {
-            Button
+            Button,
+            Popup
         },
 
         data() {
@@ -86,13 +95,23 @@
             },
 
             showPopUp() {
-                alert('No hay más números disponibles');
+                //this.clearNumbers();
                 this.popup = true;
-                this.number = "-"
+                this.number = "-";
             },
 
             insertNumber() {
                 this.html_numbers += `<p>${this.letter} - ${this.number}</p>`;
+            },
+
+            clearNumbers(){
+                this.popup = false;
+                this.html_numbers = "";
+                clear_numbers_registered();
+            },
+
+            closePopup() {
+                this.popup = false;
             }
         }
     }
@@ -135,6 +154,7 @@
 
     .maxito {
         width: 205px;
+        user-select: none;
     }
 
     .letter, .ball {
@@ -180,6 +200,7 @@
 
     .numbers-title {
         font-size: 1.2rem;
+        flex-grow:1 ;
     }
 
     .list-balls {

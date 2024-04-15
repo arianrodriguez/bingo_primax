@@ -6,6 +6,7 @@ import Input from './Input.vue';
 <template>
     <div class="popup flex">
         <div class="card flex">
+            <i class="fa-solid fa-xmark close" @click="$emit('closePopup')"></i>
             <div class="card__content flex">
                 <h2>{{ title }}</h2>
                 <div class="card__content-detail">
@@ -95,6 +96,21 @@ import Input from './Input.vue';
         border-radius: 10px;
         margin: 2rem;
         flex-direction: column;
+        position: relative;
+    }
+
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: .5rem 1rem 0 0;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: all .2s ease-in-out;
+    }
+
+    .close:hover {
+        opacity: .7;
     }
 
     .card__content {

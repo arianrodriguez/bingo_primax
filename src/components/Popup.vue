@@ -1,5 +1,6 @@
 <script setup>
 import Button from './Button.vue';
+import Input from './Input.vue';
 </script>
 
 <template>
@@ -10,11 +11,40 @@ import Button from './Button.vue';
                 <div class="card__content-detail">
                     {{ detail }}
                 </div>
+
+                <div 
+                v-if="title === '¡BINGO!'"
+                class="form_winner flex"
+                style="flex-direction: column; gap:1rem;">
+                    <Input 
+                        v-if="!input_dni"
+                        type="password" 
+                        placeholder="Contraseña"
+                        @newWinnerDNI="showInputDNI" 
+                    />
+    
+                    <Input 
+                        v-if="input_dni"
+                        type="text" 
+                        placeholder="Ingresa DNI del colaborador" 
+                    />
+
+                    <Button
+                        v-if="input_dni"
+                        title="confirmar"
+                        @click="$emit('closePopup')"
+                        class="button-accept"
+                    />
+                </div>
+                
                 <Button
-                    title="Aceptar"
+                    v-if="title !== '¡BINGO!'"
+                    title="aceptar"
                     @click="$emit('closePopup')"
                     class="button-accept"
                 />
+
+                
             </div>
         </div>
     </div>
@@ -22,9 +52,15 @@ import Button from './Button.vue';
 
 <script>
     export default {
+        data() {
+            return {
+                input_dni: false
+            }
+        },
         name: "Popup",
         components: {
-            Button
+            Button,
+            Input
         },
         props: {
             title: {
@@ -32,6 +68,12 @@ import Button from './Button.vue';
             },
             detail: {
                 type: String
+            }
+        },
+        methods: {
+            showInputDNI: function() {
+                this.input_dni = true;
+                console.log('showInputDNI')
             }
         }
     }

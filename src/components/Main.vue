@@ -8,8 +8,8 @@
     <div class="main">
         <Popup 
         v-if="popup"
-        title="No hay más números" 
-        detail="No hay más números disponibles para girar, por favor restablezca los números para continuar."
+        :title="title_popup" 
+        :detail="detail_popup"
         @closePopup="closePopup" />
         <div class="main__content flex">
             <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
@@ -28,11 +28,11 @@
                 <Button title="girar" 
                 :noNumbers="popup"
                 @emitNumber="changeNumber"
-                @noNumbers="showPopUp"/>
+                @noNumbers="anyNumber"/>
             </div>
 
             <div class="wrapper flex">
-                <p class="new-winner">¿Nuevo ganador?</p>
+                <p class="new-winner" @click="newWinner">¿Nuevo ganador?</p>
                 <div class="card flex">
                     <h2 class="numbers-title">Números cantados</h2>
                     <div class="list-balls">
@@ -94,10 +94,18 @@
                 
             },
 
-            showPopUp() {
+            anyNumber() {
                 //this.clearNumbers();
                 this.popup = true;
                 this.number = "-";
+                this.title_popup = "No hay más números";
+                this.detail_popup = "No hay más números disponibles para girar, por favor restablezca los números para continuar.";
+            },
+
+            newWinner() {
+                this.popup = true;
+                this.title_popup = "¡BINGO!";
+                this.detail_popup = "¿Desea ingresar un nuevo ganador?";
             },
 
             insertNumber() {
@@ -222,9 +230,8 @@
     }
 
     .new-winner:hover {
-        opacity: .7;
+        opacity: .5;
     }
-
 
     @media screen and (max-width: 1020px) {
         .main {

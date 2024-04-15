@@ -16,6 +16,7 @@
 <style scoped>
     .bingo-header img {
         width: 70%;
+        user-select: none;
     }
 
     .main-section {

@@ -17,7 +17,7 @@ const generate_ball = () => {
     while(1) {
         let number = Math.floor(Math.random() * 75) + 1;
 
-        if(Object.keys(numbers_registered).length === 75) return
+        if(Object.keys(numbers_registered).length === 5) return
 
         if(!numbers_registered[number]) {
             numbers_registered[number] = 1;
@@ -27,8 +27,15 @@ const generate_ball = () => {
     }
 }
 
+const clear_numbers_registered = () => {
+    console.log('Numeros', numbers_registered);
+    Object.keys(numbers_registered).forEach(i => delete numbers_registered[i]);
+    console.log('Numeros reseteados', numbers_registered)
+}
+
 export {
     generate_ball,
     animation_numbers_random,
-    range_letters
+    clear_numbers_registered,
+    range_letters,
 }

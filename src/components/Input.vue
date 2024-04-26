@@ -8,7 +8,7 @@
 export default {
     data() {
         return {
-            data: ''
+            data: '',
         }
     },
 
@@ -24,11 +24,10 @@ export default {
     },
     methods: {
         onInput: function() {
-            if(this.data.toLowerCase() === "andrews" && this.type === "password") {
-                console.log('ESTIMATED')
+            if(this.data.toLowerCase() === process.env.VITE_SECURITY_KEY.replace(/\"/g, '') && this.type === "password") {
                 this.$emit('newWinnerDNI', this.data);
-                this.data = '';
             }
+          this.$emit('valueDNI', this.data)
         }
     }
 }

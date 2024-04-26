@@ -1,16 +1,11 @@
-<script setup>
-    import Button from './Button.vue'
-    import Popup from './Popup.vue';
-    import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
-</script>
-
 <template>
     <div class="main">
         <Popup 
         v-if="popup"
         :title="title_popup" 
         :detail="detail_popup"
-        @closePopup="closePopup" />
+        @closePopup="closePopup"
+        @responseWinner="obtainWinner"/>
         <div class="main__content flex">
             <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
             
@@ -47,6 +42,10 @@
 </template>
 
 <script>
+    import Button from "@/components/Button.vue";
+    import Popup from "@/components/Popup.vue";
+    import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
+
     export default {
         name: 'Main',
         components: {
@@ -59,7 +58,9 @@
                 number: "?",
                 letter: "B",
                 popup: false,
-                html_numbers: ""
+                html_numbers: "",
+                title_popup: "",
+                detail_popup: ""
             }
         },
         methods: {
@@ -120,9 +121,24 @@
 
             closePopup() {
                 this.popup = false;
+            },
+
+            obtainWinner(data) {
+              if(data.status === "error") {
+                this.title_popup = "Ups!";
+                this.detail_popup = "No se ha podido registrar el ganador, posiblemente se trate de un trabajo no activo";
+              }
+              else {
+                this.title_popup = "¡Felicidades!";
+                this.detail_popup = `${data.detail.Nombres} de la estación
+                ${data.detail.Estacion} con posición
+                ${data.detail.Puesto}`;
+              }
             }
+
         }
     }
+
 </script>
 
 <style scoped>

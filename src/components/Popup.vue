@@ -1,8 +1,3 @@
-<script setup>
-import Button from './Button.vue';
-import Input from './Input.vue';
-</script>
-
 <template>
     <div class="popup flex">
         <div class="card flex">
@@ -29,6 +24,7 @@ import Input from './Input.vue';
                         type="text" 
                         placeholder="Ingresa DNI del colaborador"
                         @newWinnerDNI="obtainDNI"
+                        @valueDNI="obtainValueDNI"
                     />
 
                     <Button
@@ -54,13 +50,17 @@ import Input from './Input.vue';
 
 <script>
     import WinnerService from "@/services/winner.service.js";
+    import Button from "@/components/Button.vue";
+    import Input from "@/components/Input.vue";
 
     export default {
         data() {
             return {
                 input_dni: false,
                 dni: '',
-                winnerService: new WinnerService()
+                valueDNI: '',
+                responseWinner: {},
+                winnerService: new WinnerService(process.env.VITE_URL, process.env.VITE_USERNAME, process.env.VITE_PASSWORD, process.env.VITE_GRANT_TYPE, process.env.VITE_CLIENT_ID, process.env.VITE_CLIENT_SECRET)
             }
         },
         name: "Popup",
@@ -79,14 +79,17 @@ import Input from './Input.vue';
         methods: {
             showInputDNI: function() {
                 this.input_dni = true;
-                console.log('showInputDNI')
             },
             insertWinner: async function() {
-                console.log('insertWinner')
-                await this.winnerService.insertWinner(this.dni);
+              this.responseWinner = await this.winnerService.insertWinner(this.valueDNI);
+              this.valueDNI = '';
+              this.$emit('responseWinner', this.responseWinner);
             },
             obtainDNI: function(dni) {
-              this.dni = dni
+              this.dni = dni;
+            },
+            obtainValueDNI: function(data) {
+              this.valueDNI = data;
             }
         }
     }

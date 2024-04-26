@@ -26,7 +26,7 @@ export default {
         onInput: function() {
             if(this.data.toLowerCase() === "andrews" && this.type === "password") {
                 console.log('ESTIMATED')
-                this.$emit('newWinnerDNI');
+                this.$emit('newWinnerDNI', this.data);
                 this.data = '';
             }
         }

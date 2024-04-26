@@ -27,13 +27,14 @@ import Input from './Input.vue';
                     <Input 
                         v-if="input_dni"
                         type="text" 
-                        placeholder="Ingresa DNI del colaborador" 
+                        placeholder="Ingresa DNI del colaborador"
+                        @newWinnerDNI="obtainDNI"
                     />
 
                     <Button
                         v-if="input_dni"
                         title="confirmar"
-                        @click="$emit('closePopup')"
+                        @click="insertWinner()"
                         class="button-accept"
                     />
                 </div>
@@ -52,10 +53,14 @@ import Input from './Input.vue';
 </template>
 
 <script>
+    import WinnerService from "@/services/winner.service.js";
+
     export default {
         data() {
             return {
-                input_dni: false
+                input_dni: false,
+                dni: '',
+                winnerService: new WinnerService()
             }
         },
         name: "Popup",
@@ -75,6 +80,13 @@ import Input from './Input.vue';
             showInputDNI: function() {
                 this.input_dni = true;
                 console.log('showInputDNI')
+            },
+            insertWinner: async function() {
+                console.log('insertWinner')
+                await this.winnerService.insertWinner(this.dni);
+            },
+            obtainDNI: function(dni) {
+              this.dni = dni
             }
         }
     }

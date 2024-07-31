@@ -4,7 +4,7 @@ import BingoView from "@/views/BingoView.vue";
 
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(),
     routes: [
         {path: "/", redirect: "/iniciar-sesion"},
         {path: "/iniciar-sesion", component: AuthenticationView},

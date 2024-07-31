@@ -21,8 +21,7 @@
                     if(!number) this.$emit('noNumbers')
                 
                     let data = [number];
-                    console.log('number: ', number)
-    
+
                     for(let i=0; i<100; i++) {
                         let number = animation_numbers_random();
                         data.push(number);
@@ -30,9 +29,6 @@
                     this.$emit('emitNumber', data);   
                 }else if(this.title === "restablecer") {
                     this.$emit('resetNumbers')
-                }else if(this.title === "confirmar") {
-                    // backend
-                    console.log('nuevo ganador');
                 }
             }
         }

@@ -1,11 +1,14 @@
 <template>
     <div class="main">
+      <PopupBallWinner v-if="this.showPopUpBallWinner" @closePopupBallWinner="closePopupBallWinner" :letter="this.letter" :number="this.number"/>
+
         <Popup 
         v-if="popup"
         :title="title_popup" 
         :detail="detail_popup"
         @closePopup="closePopup"
-        @responseWinner="obtainWinner"/>
+        />
+
         <div class="main__content flex">
             <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
             
@@ -28,12 +31,28 @@
 
             <div class="wrapper flex">
                 <p class="new-winner" @click="newWinner">¿Nuevo ganador?</p>
+
+              <div class="megacard">
+                <div class="card__content">
+                  <p>B</p>
+                  <p>I</p>
+                  <p>N</p>
+                  <p>G</p>
+                  <p>O</p>
+
+                  <div class="grid-item" v-for="item in items" :key="item.id" :style="getGridStyle(item)">
+                    {{ item.content }}
+                  </div>
+                </div>
+              </div>
+              <!--
                 <div class="card flex">
                     <h2 class="numbers-title">Números cantados</h2>
                     <div class="list-balls">
                         <p v-html="html_numbers"></p>
                     </div>
                 </div>
+                -->
                 <Button title="restablecer"
                 @resetNumbers="clearNumbers"/>
             </div>
@@ -45,22 +64,34 @@
     import Button from "@/components/Button.vue";
     import Popup from "@/components/Popup.vue";
     import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
+    import PopupBallWinner from "@/components/PopupBallWinner.vue";
 
     export default {
         name: 'Main',
         components: {
+          PopupBallWinner,
             Button,
             Popup
         },
 
         data() {
             return {
-                number: "?",
-                letter: "B",
-                popup: false,
-                html_numbers: "",
-                title_popup: "",
-                detail_popup: ""
+              number: "?",
+              letter: "B",
+              popup: false,
+              html_numbers: "",
+              title_popup: "",
+              detail_popup: "",
+              showPopUpBallWinner: false,
+              items: [],
+              countRows: {
+                1: 2,
+                2: 2,
+                3: 2,
+                4: 2,
+                5: 2
+              },
+              ballLoading: false
             }
         },
         methods: {
@@ -78,21 +109,35 @@
                     if(indexLetter > 4) indexLetter = 0;
 
                     if (index >= data.length) {
-                        console.log('ojo')
+
                         this.number = data[0];
                         for(let i=0; i<letters.length; ++i) {
                             if(this.number >= range_letters[letters[i]][0] && this.number <= range_letters[letters[i]][1]) {
                                 this.letter = letters[i];
                                 break;
                             }
-                            
+
                         }
                         clearInterval(interval);
-                        this.insertNumber();
+                        this.addItem();
+                        this.showPopUpBallWinner = !this.showPopUpBallWinner;
                     }
                 }, 10);
-
                 
+            },
+            getGridStyle(item) {
+              return {
+                gridColumn: `${item.column} / span 1`,
+                gridRow: `${item.row} / span 1`
+              };
+            },
+            addItem() {
+              const columns = {"B": 1, "I": 2, "N": 3, "G": 4, "O": 5};
+              const row = columns[this.letter.toUpperCase()];
+
+              this.items.push({ id: parseInt(this.number), row: this.countRows[row], column: row, content: this.number});
+
+              this.countRows[row]++;
             },
 
             anyNumber() {
@@ -115,12 +160,25 @@
 
             clearNumbers(){
                 this.popup = false;
+                this.items = [];
                 this.html_numbers = "";
+                this.number = "?";
+                this.countRows = {
+                  1: 2,
+                  2: 2,
+                  3: 2,
+                  4: 2,
+                  5: 2
+                };
                 clear_numbers_registered();
             },
 
             closePopup() {
                 this.popup = false;
+            },
+
+            closePopupBallWinner() {
+                this.showPopUpBallWinner = !this.showPopUpBallWinner
             },
 
             obtainWinner(data) {
@@ -143,15 +201,15 @@
 
 <style scoped>
     .main {
-        width: 960px;
         margin: 0 auto;
     }
 
     .main__content {
-        justify-content: space-between;
+      gap: 2rem;
+      padding: 1rem;
     }
 
-    .card {
+    .card, .megacard {
         min-width: 240px;
         min-height: 350px;
         max-width: 240px;
@@ -163,6 +221,29 @@
         overflow: hidden;
         padding: 1rem;
         justify-content: space-around;
+    }
+
+    .megacard {
+      min-width: 650px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      overflow: scroll;
+      padding-top: 2rem;
+    }
+
+    .card__content {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(16, 30px);
+      justify-items: center;
+      align-items: center;
+      text-align: center;
+      row-gap: .5rem;
+    }
+
+    .grid-item {
+      font-size: 1.5rem;
+      font-weight: lighter;
     }
 
     .ball {
@@ -249,13 +330,14 @@
         opacity: .5;
     }
 
-    @media screen and (max-width: 1020px) {
+    @media screen and (max-width: 1050px) {
         .main {
             width:auto;
         }
         
         .main__content {
-            flex-direction: column;
+          flex-direction: column;
+          gap: 4rem;
         }
 
         .maxito {

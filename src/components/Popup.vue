@@ -28,7 +28,7 @@
                     />
 
                     <Button
-                        v-if="input_dni"
+                        v-if="input_dni && !showSpinner"
                         title="confirmar"
                         @click="insertWinner()"
                         class="button-accept"
@@ -42,6 +42,8 @@
                     class="button-accept"
                 />
 
+              <SpinnerComponent v-if="showSpinner"/>
+
                 
             </div>
         </div>
@@ -52,6 +54,8 @@
     import WinnerService from "@/services/winner.service.js";
     import Button from "@/components/Button.vue";
     import Input from "@/components/Input.vue";
+    import Swal from "sweetalert2";
+    import SpinnerComponent from "@/components/SpinnerComponent.vue";
 
     export default {
         data() {
@@ -60,11 +64,13 @@
                 dni: '',
                 valueDNI: '',
                 responseWinner: {},
-                winnerService: new WinnerService(process.env.VITE_URL, process.env.VITE_USERNAME, process.env.VITE_PASSWORD, process.env.VITE_GRANT_TYPE, process.env.VITE_CLIENT_ID, process.env.VITE_CLIENT_SECRET)
+                showSpinner: false,
+                winnerService: new WinnerService()
             }
         },
         name: "Popup",
         components: {
+          SpinnerComponent,
             Button,
             Input
         },
@@ -81,9 +87,51 @@
                 this.input_dni = true;
             },
             insertWinner: async function() {
-              this.responseWinner = await this.winnerService.insertWinner(this.valueDNI);
+              const token = localStorage.getItem('token');
+              if(!token) {
+                await Swal.fire({
+                  title: 'Ha ocurrido un error',
+                  text: 'No se pudo realizar el registro del ganador',
+                  icon: 'error'
+                })
+                return;
+              }
+
+              this.showSpinner = !this.showSpinner;
+              try {
+                const response = await this.winnerService.insertWinner(token, this.valueDNI);
+
+                if(response.status === 201) {
+                  const htmlResponse = `
+                 <p>${response.data.nombres}<br>${response.data.estacion}<br>${response.data.puesto}</p>
+                  `
+                  await Swal.fire({
+                    title: '¡Felicidades!',
+                    html: htmlResponse,
+                    icon: 'success'
+                  });
+                  this.$emit('closePopup');
+
+                }else if(response.status === 400) {
+                  await Swal.fire({
+                    title: '¡Alerta!',
+                    text: 'El número de documento ingresado no es correcto, posiblemente se trate de un trabajador no activo',
+                    icon: 'warning'
+                  });
+                }else {
+                  throw new Error();
+                }
+              }catch(e) {
+                await Swal.fire({
+                  title: 'Ha ocurrido un error',
+                  text: 'No se pudo realizar el registro del ganador',
+                  icon: 'error'
+                });
+                this.$emit('closePopup');
+              }
+
               this.valueDNI = '';
-              this.$emit('responseWinner', this.responseWinner);
+              this.showSpinner = !this.showSpinner;
             },
             obtainDNI: function(dni) {
               this.dni = dni;

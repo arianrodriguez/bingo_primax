@@ -20,14 +20,21 @@ export default {
         type: {
             type: String,
             required: true
+        },
+        login: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {
         onInput: function() {
-            if(this.data.toLowerCase() === process.env.VITE_SECURITY_KEY.replace(/\"/g, '') && this.type === "password") {
+            if(this.data.toLowerCase() === import.meta.env.VITE_PASSWORD && this.type === "password") {
                 this.$emit('newWinnerDNI', this.data);
             }
-          this.$emit('valueDNI', this.data)
+          if(!this.login) this.$emit('valueDNI', this.data)
+          else {
+            this.$emit('valueText', this.data)
+          }
         }
     }
 }
@@ -35,7 +42,7 @@ export default {
 
 <style scoped>
     .input input {
-        border: 2px solid #000;
+        border: 1px solid #000;
         padding: .5rem;
         border-radius: 10px;
         font-family: "Poppins", sans-serif;

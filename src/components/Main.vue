@@ -170,6 +170,7 @@
                   5: 2
                 };
                 clear_numbers_registered();
+                this.showSpinner = !this.showSpinner;
             },
 
             closePopup() {

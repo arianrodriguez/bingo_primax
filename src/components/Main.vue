@@ -23,10 +23,12 @@
                     </div>
                 </div>
 
-                <Button title="girar" 
+                <Button title="girar"
+                        v-if="!this.showSpinner"
                 :noNumbers="popup"
                 @emitNumber="changeNumber"
                 @noNumbers="anyNumber"/>
+                <SpinnerComponent v-if="this.showSpinner"/>
             </div>
 
             <div class="wrapper flex">
@@ -45,14 +47,7 @@
                   </div>
                 </div>
               </div>
-              <!--
-                <div class="card flex">
-                    <h2 class="numbers-title">Números cantados</h2>
-                    <div class="list-balls">
-                        <p v-html="html_numbers"></p>
-                    </div>
-                </div>
-                -->
+
                 <Button title="restablecer"
                 @resetNumbers="clearNumbers"/>
             </div>
@@ -65,10 +60,12 @@
     import Popup from "@/components/Popup.vue";
     import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
     import PopupBallWinner from "@/components/PopupBallWinner.vue";
+    import SpinnerComponent from "@/components/SpinnerComponent.vue";
 
     export default {
         name: 'Main',
         components: {
+          SpinnerComponent,
           PopupBallWinner,
             Button,
             Popup
@@ -91,11 +88,12 @@
                 4: 2,
                 5: 2
               },
-              ballLoading: false
+              showSpinner: false
             }
         },
         methods: {
             changeNumber(data) {
+                this.showSpinner = !this.showSpinner;
                 let letters = ['B', 'I', 'N', 'G', 'O'];
                 let index = 0;
                 let indexLetter = 0;
@@ -120,7 +118,8 @@
                         }
                         clearInterval(interval);
                         this.addItem();
-                        this.showPopUpBallWinner = !this.showPopUpBallWinner;
+                      this.showSpinner = !this.showSpinner;
+                      this.showPopUpBallWinner = !this.showPopUpBallWinner;
                     }
                 }, 10);
                 

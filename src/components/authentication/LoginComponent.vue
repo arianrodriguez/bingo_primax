@@ -65,7 +65,7 @@ export default {
       this.user.username = text;
     },
     obtainPassword: function(text) {
-      text = text.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]/g, '');
+      text = text.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s$]/g, '');
       this.user.password = text;
     }
   }

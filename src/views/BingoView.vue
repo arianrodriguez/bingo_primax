@@ -9,6 +9,7 @@ export default {
 
 <template>
   <section class="main-section flex">
+    <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
     <div class="bingo-header flex">
       <img src="/src/assets/img/bingo-logo.png" alt="Bingo">
     </div>
@@ -18,14 +19,21 @@ export default {
 
 <style scoped>
 .bingo-header img {
-  width: 70%;
+  width: 60%;
   user-select: none;
-  margin-top: 5rem;
 }
 
 .main-section {
   height: 85vh;
   flex-direction: column;
+  position: relative;
+}
+
+.maxito {
+  position: absolute;
+  width: 250px;
+  left: 3%;
+  bottom: 0;
 }
 
 @media screen and (max-width: 1050px) {

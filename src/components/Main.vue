@@ -10,7 +10,7 @@
         />
 
         <div class="main__content flex">
-            <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
+            <!--<img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">-->
             
             <div class="wrapper flex">
                 <div class="card flex">
@@ -86,14 +86,27 @@
                 2: 2,
                 3: 2,
                 4: 2,
-                5: 2
+                5: 2,
+                6: 2,
+                7: 2,
+                8: 2,
+                9: 2,
+                10: 2
               },
-              showSpinner: false
+              showSpinner: false,
+              columns: {
+                "B1": 1, "B2": 2,
+                "I1": 3, "I2": 4,
+                "N1": 5, "N2": 6,
+                "G1": 7, "G2": 8,
+                "O1": 9, "O2": 10
+              },
+              lastLetter: ""
             }
         },
         methods: {
             changeNumber(data) {
-                this.showSpinner = !this.showSpinner;
+                this.showSpinner = true;
                 let letters = ['B', 'I', 'N', 'G', 'O'];
                 let index = 0;
                 let indexLetter = 0;
@@ -105,10 +118,9 @@
                     index++;
                     indexLetter++;
                     if(indexLetter > 4) indexLetter = 0;
-
                     if (index >= data.length) {
-
                         this.number = data[0];
+                        this.lastLetter = this.number;
                         for(let i=0; i<letters.length; ++i) {
                             if(this.number >= range_letters[letters[i]][0] && this.number <= range_letters[letters[i]][1]) {
                                 this.letter = letters[i];
@@ -118,45 +130,49 @@
                         }
                         clearInterval(interval);
                         this.addItem();
-                      this.showSpinner = !this.showSpinner;
-                      this.showPopUpBallWinner = !this.showPopUpBallWinner;
+                        this.showSpinner = false;
+                        this.showPopUpBallWinner = !this.showPopUpBallWinner;
                     }
                 }, 10);
-                
             },
             getGridStyle(item) {
               return {
                 gridColumn: `${item.column} / span 1`,
-                gridRow: `${item.row} / span 1`
+                gridRow: `${item.row} / span 1`,
+                color: `${this.lastLetter === item.content ? 'red' : 'black'}`,
+                fontWeight: `${this.lastLetter === item.content ? 'bold' : 'normal'}`
               };
             },
             addItem() {
-              const columns = {"B": 1, "I": 2, "N": 3, "G": 4, "O": 5};
-              const row = columns[this.letter.toUpperCase()];
+              let row = this.columns[`${this.letter}1`];
 
-              this.items.push({ id: parseInt(this.number), row: this.countRows[row], column: row, content: this.number});
+              if (this.countRows[this.columns[`${this.letter}1`]] >= 10) {
+                row = this.columns[`${this.letter}2`];
+              }
+
+              this.items.push({
+                id: parseInt(this.number),
+                row: this.countRows[row],
+                column: row,
+                content: this.number,
+                className: row % 2 === 1 ? 'sub1' : 'sub2'
+              });
 
               this.countRows[row]++;
             },
-
             anyNumber() {
                 //this.clearNumbers();
                 this.popup = true;
                 this.number = "-";
                 this.title_popup = "No hay más números";
                 this.detail_popup = "No hay más números disponibles para girar, por favor restablezca los números para continuar.";
+                this.showSpinner = false;
             },
-
             newWinner() {
                 this.popup = true;
                 this.title_popup = "¡BINGO!";
                 this.detail_popup = "¿Desea ingresar un nuevo ganador?";
             },
-
-            insertNumber() {
-                this.html_numbers += `<p>${this.letter} - ${this.number}</p>`;
-            },
-
             clearNumbers(){
                 this.popup = false;
                 this.items = [];
@@ -167,10 +183,15 @@
                   2: 2,
                   3: 2,
                   4: 2,
-                  5: 2
+                  5: 2,
+                  6: 2,
+                  7: 2,
+                  8: 2,
+                  9: 2,
+                  10: 2
                 };
                 clear_numbers_registered();
-                this.showSpinner = !this.showSpinner;
+                this.showSpinner = false;
             },
 
             closePopup() {
@@ -179,19 +200,6 @@
 
             closePopupBallWinner() {
                 this.showPopUpBallWinner = !this.showPopUpBallWinner
-            },
-
-            obtainWinner(data) {
-              if(data.status === "error") {
-                this.title_popup = "Ups!";
-                this.detail_popup = "No se ha podido registrar el ganador, posiblemente se trate de un trabajo no activo";
-              }
-              else {
-                this.title_popup = "¡Felicidades!";
-                this.detail_popup = `${data.detail.Nombres} de la estación
-                ${data.detail.Estacion} con posición
-                ${data.detail.Puesto}`;
-              }
             }
 
         }
@@ -233,17 +241,30 @@
 
     .card__content {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(16, 30px);
+      grid-template-columns: repeat(10, 1fr); /* 2 subcolumnas por cada letra */
+      grid-template-rows: repeat(8, 20px);   /* 8 filas para las subcolumnas */
       justify-items: center;
       align-items: center;
       text-align: center;
       row-gap: .5rem;
     }
 
+    .card__content p {
+      grid-column: span 2; /* Cada letra ocupa 2 columnas */
+      grid-row: 1;
+    }
+
     .grid-item {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: lighter;
+    }
+
+    .grid-item.sub1 {
+      grid-row: span 8;
+    }
+
+    .grid-item.sub2 {
+      grid-row: span 7;
     }
 
     .ball {

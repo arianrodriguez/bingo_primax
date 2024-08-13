@@ -23,14 +23,11 @@ const generate_ball = () => {
             numbers_registered[number] = 1;
             return number;
         }
-        console.log(numbers_registered)
     }
 }
 
 const clear_numbers_registered = () => {
-    console.log('Numeros', numbers_registered);
     Object.keys(numbers_registered).forEach(i => delete numbers_registered[i]);
-    console.log('Numeros reseteados', numbers_registered)
 }
 
 export {

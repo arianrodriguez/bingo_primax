@@ -36,11 +36,11 @@
 
               <div class="megacard">
                 <div class="card__content">
-                  <p>B</p>
-                  <p>I</p>
-                  <p>N</p>
-                  <p>G</p>
-                  <p>O</p>
+                  <p class="bingo__header-item">B</p>
+                  <p class="bingo__header-item">I</p>
+                  <p class="bingo__header-item">N</p>
+                  <p class="bingo__header-item">G</p>
+                  <p class="bingo__header-item">O</p>
 
                   <div class="grid-item" v-for="item in items" :key="item.id" :style="getGridStyle(item)">
                     {{ item.content }}
@@ -139,8 +139,10 @@
               return {
                 gridColumn: `${item.column} / span 1`,
                 gridRow: `${item.row} / span 1`,
-                color: `${this.lastLetter === item.content ? 'red' : 'black'}`,
-                fontWeight: `${this.lastLetter === item.content ? 'bold' : 'normal'}`
+                color: `${this.lastLetter === item.content ? '#fff' : '#000'}`,
+                fontWeight: `${this.lastLetter === item.content ? 'bold' : 'normal'}`,
+                backgroundColor: `${this.lastLetter === item.content ? '#1E22AA' : '#fff'}`,
+                padding: `${this.lastLetter === item.content ? '0 .5rem' : '0'}`
               };
             },
             addItem() {
@@ -208,6 +210,18 @@
 </script>
 
 <style scoped>
+  .bingo__header-item {
+    background-color: #1E22AA;
+    width: 75px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 20px;
+    font-size: 2rem;
+    line-height: 20px;
+    text-align: center;
+    padding: .6rem 0;
+  }
+
     .main {
         margin: 0 auto;
     }
@@ -235,7 +249,6 @@
       min-width: 650px;
       font-size: 2.5rem;
       font-weight: bold;
-      overflow: scroll;
       padding-top: 2rem;
     }
 
@@ -246,11 +259,27 @@
       justify-items: center;
       align-items: center;
       text-align: center;
-      row-gap: .5rem;
+      row-gap: 1rem;
+      position: relative;
+
     }
 
-    .card__content p {
-      grid-column: span 2; /* Cada letra ocupa 2 columnas */
+  .card__content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(to right, black 1px, transparent 1px); /* Lineas verticales */
+    background-size: calc(100% / 4) 100%; /* 10 columnas para distribuir las lineas */
+    pointer-events: none; /* Permite hacer clic en los elementos debajo */
+  }
+
+
+  .card__content p {
+      grid-column: span 2;
       grid-row: 1;
     }
 
@@ -259,7 +288,10 @@
       font-weight: lighter;
     }
 
-    .grid-item.sub1 {
+
+
+
+  .grid-item.sub1 {
       grid-row: span 8;
     }
 

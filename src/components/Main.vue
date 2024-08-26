@@ -62,6 +62,9 @@
 </template>
 
 <script>
+    import image1 from '@/assets/img/cartilla_ejemplo.png';
+    import image2 from '@/assets/img/cartilla_ejemplo_2.png';
+    import image3 from '@/assets/img/cartilla_ejemplo_3.png';
     import Button from "@/components/Button.vue";
     import Popup from "@/components/Popup.vue";
     import { range_letters, clear_numbers_registered } from '../services/animation-balls.js'
@@ -116,13 +119,13 @@
               let imageUrl = '';
               switch (variable) {
                 case 1:
-                  imageUrl = '/src/assets/img/cartilla_ejemplo.png';
+                  imageUrl = image1;
                   break;
                 case 2:
-                  imageUrl = '/src/assets/img/cartilla_ejemplo_2.png';
+                  imageUrl = image2;
                   break;
                 default:
-                  imageUrl = '/src/assets/img/cartilla_ejemplo_3.png';
+                  imageUrl = image3;
               }
               return {
                 'background-image': `url(${imageUrl})`

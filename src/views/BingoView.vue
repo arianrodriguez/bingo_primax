@@ -9,11 +9,12 @@ export default {
 
 <template>
   <section class="main-section flex">
-    <img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">
+    <img src="../assets/img/REGLAS.png" alt="Logo Primax" class="reglas">
+    <img src="../assets/img/logo-primax-blanco.png" alt="Logo Primax"  class="logo">
     <div class="bingo-header flex">
       <img src="/src/assets/img/bingo-logo.png" alt="Bingo">
     </div>
-    <Main />
+    <Main class="main-wrapper"/>
   </section>
 </template>
 
@@ -24,16 +25,28 @@ export default {
 }
 
 .main-section {
-  height: 85vh;
+  height: 100vh;
   flex-direction: column;
+  justify-content: space-around;
   position: relative;
 }
 
-.maxito {
+.main-wrapper {
+  height: 100%;
+}
+
+.logo {
+  width: 200px;
   position: absolute;
-  width: 250px;
-  left: 3%;
-  bottom: 0;
+  right: 0;
+  top: 0;
+}
+
+.reglas {
+  width: 350px;
+  position: absolute;
+  left: 1%;
+  top: 5%;
 }
 
 @media screen and (max-width: 1050px) {

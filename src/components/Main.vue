@@ -10,8 +10,6 @@
         />
 
         <div class="main__content flex">
-            <!--<img src="/src/assets/img/maxito.png" alt="Maxito" class="maxito">-->
-            
             <div class="wrapper flex">
                 <div class="card flex">
                     <h2 class="letter">{{ letter }}</h2>
@@ -31,8 +29,8 @@
                 <SpinnerComponent v-if="this.showSpinner"/>
             </div>
 
-            <div class="wrapper flex">
-                <p class="new-winner" @click="newWinner">¿Nuevo ganador?</p>
+            <div class="wrapper flex wrapper-megacard">
+              <p class="new-winner" @click="newWinner">¿Nuevo ganador?</p>
 
               <div class="megacard">
                 <div class="card__content">
@@ -51,6 +49,14 @@
                 <Button title="restablecer"
                 @resetNumbers="clearNumbers"/>
             </div>
+
+
+          <div class="wrapper flex">
+            <div class="card flex template-image-card"  :style="getBackgroundImageUrl(this.card_number)">
+            </div>
+
+            <Button title="mover cartilla" @click="moveCard"/>
+          </div>
         </div>
     </div>
 </template>
@@ -101,10 +107,31 @@
                 "G1": 7, "G2": 8,
                 "O1": 9, "O2": 10
               },
-              lastLetter: ""
+              lastLetter: "",
+              card_number: 1
             }
         },
         methods: {
+            getBackgroundImageUrl(variable) {
+              let imageUrl = '';
+              switch (variable) {
+                case 1:
+                  imageUrl = '/src/assets/img/cartilla_ejemplo.png';
+                  break;
+                case 2:
+                  imageUrl = '/src/assets/img/cartilla_ejemplo_2.png';
+                  break;
+                default:
+                  imageUrl = '/src/assets/img/cartilla_ejemplo_3.png';
+              }
+              return {
+                'background-image': `url(${imageUrl})`
+              };
+            },
+            moveCard() {
+              this.card_number++;
+              if(this.card_number > 3) this.card_number = 1;
+            },
             changeNumber(data) {
                 this.showSpinner = true;
                 let letters = ['B', 'I', 'N', 'G', 'O'];
@@ -210,6 +237,13 @@
 </script>
 
 <style scoped>
+  .template-image-card {
+    background-image: url("../assets/img/cartilla_ejemplo.png");
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
   .bingo__header-item {
     background-color: #1E22AA;
     width: 75px;
@@ -223,30 +257,43 @@
   }
 
     .main {
-        margin: 0 auto;
+        width: 100%;
     }
 
     .main__content {
       gap: 2rem;
       padding: 1rem;
+      height: 100%;
+    }
+
+    .wrapper {
+      flex: 1;
+      gap: 2rem;
+      width: 20%;
+      height: 100%;
+    }
+    .card {
+      width: 100%;
+    }
+    .megacard {
+      width: 100%;
+    }
+    .wrapper-megacard {
+      flex: 2;
     }
 
     .card, .megacard {
-        min-width: 240px;
-        min-height: 350px;
-        max-width: 240px;
-        max-height: 350px;
-        flex-direction: column;
-        background-color: #fff;
-        border-radius: 25px;
-        box-shadow: -10px 5px 10px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        padding: 1rem;
-        justify-content: space-around;
+      height: 100%;
+      flex-direction: column;
+      background-color: #fff;
+      border-radius: 25px;
+      box-shadow: -10px 5px 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      padding: 1rem;
+      justify-content: space-around;
     }
 
     .megacard {
-      min-width: 650px;
       font-size: 2.5rem;
       font-weight: bold;
       padding-top: 2rem;
@@ -254,13 +301,14 @@
 
     .card__content {
       display: grid;
-      grid-template-columns: repeat(10, 1fr); /* 2 subcolumnas por cada letra */
-      grid-template-rows: repeat(8, 20px);   /* 8 filas para las subcolumnas */
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(8, 25px);
       justify-items: center;
       align-items: center;
       text-align: center;
       row-gap: 1rem;
       position: relative;
+      height: 100%;
 
     }
 
@@ -272,9 +320,9 @@
     right: 0;
     bottom: 0;
     background-image:
-        linear-gradient(to right, black 1px, transparent 1px); /* Lineas verticales */
-    background-size: calc(100% / 4) 100%; /* 10 columnas para distribuir las lineas */
-    pointer-events: none; /* Permite hacer clic en los elementos debajo */
+        linear-gradient(to right, black 1px, transparent 1px);
+    background-size: calc(100% / 4) 100%;
+    pointer-events: none;
   }
 
 
@@ -371,12 +419,13 @@
 
     .new-winner {
         position: absolute;
-        top: -10%;
+        top: -8%;
         font-size: 1.2rem;
         color: #fff;
         font-style: italic;
-        transition: all .3s ease-in-out;
+        transition: all .2s ease-in-out;
         cursor: pointer;
+      text-decoration: underline 1px solid;
     }
 
     .new-winner:hover {

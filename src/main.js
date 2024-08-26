@@ -13,7 +13,6 @@ const token = localStorage.getItem('token');
 if (token) {
     try {
         const decodedToken = jwtDecode(token);
-        console.log(decodedToken)
         const currentTime = Math.floor(Date.now() / 1000);
         if (decodedToken.exp < currentTime) {
             localStorage.removeItem('token');
